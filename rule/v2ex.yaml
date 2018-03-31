@@ -1,0 +1,49 @@
+key: v2ex
+base: https://www.v2ex.com
+index:
+  url: /?tab=tech
+  category:
+    items: div#Tabs > a
+login:
+  url: /signin
+  # postUrl: /signin
+  checkLogin: id="money" # 检查是否登陆成功
+  # headers:
+  #   Referer:
+  #     - https://v2ex.com/signin
+  replace:
+    captchaImgUrl:
+      - .*?url\(&#39;(.*?)&#39;\);.* # .*?'(.*?)'.* 单引号需要转义
+      - $1
+rules:
+  -
+    type: form
+    match: /signin
+    username: div#Main > div.box > div.cell > form > table > tbody > tr:nth-child(1) > td:nth-child(2) > input
+    password: div#Main > div.box > div.cell > form > table > tbody > tr:nth-child(2) > td:nth-child(2) > input
+    captchaImgUrl: div#Main > div.box > div.cell > form > table > tbody > tr:nth-child(3) > td:nth-child(2) > div:nth-child(1)
+    captcha: div#Main > div.box > div.cell > form > table > tbody > tr:nth-child(3) > td:nth-child(2) > input
+    once: div#Main > div.box > div.cell > form > table > tbody > tr:nth-child(4) > td:nth-child(2) > input:nth-child(1)
+    hidden: div#Main > div.box > div.cell > form > input
+  -
+    type: list
+    match: /(\?tab=\w+)?
+    items: div#Main > div:nth-child(2) > .item
+    itemTitle: .item_title > a
+    itemAuthor: strong:nth-child(3) > a
+    itemAvatar: img.avatar
+    itemLastReply: strong:nth-child(4) > a
+    itemReplyCount: a.count_livid
+  -
+    type: thread
+    match: /t/\d+(#\w+)?
+    title: h1
+    body: div.markdown_body
+    author: div.header > small > a
+    avatar: div.header img.avatar
+    items: div#Main > div:nth-child(4) > div[id^=r_]
+    itemContent: .reply_content
+    itemAuthor: strong:nth-child(3) > a
+    itemAvatar: img.avatar
+    itemNo: span.no
+    

@@ -1,0 +1,64 @@
+key: hipda
+base: https://www.hi-pda.com/forum
+index:
+  url: /index.php
+  # category:
+  #   items: h3 > a
+login:
+  url: /logging.php?action=login
+  postUrl: /logging.php?action=login&loginsubmit=yes&inajax=1
+  checkLogin: <p>欢迎您回来 # 检查是否登陆成功
+  # headers:
+  #   User-Agent:
+  #     - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36
+  convert:
+    password:
+      -
+        - md5
+rules:
+  -
+    type: form
+    match: /logging\.php\?action=login
+    username: div#account > input
+    password: input#password3
+    sid: form#loginform > input[type="hidden"]:nth-child(1)
+    formhash: form#loginform > input[type="hidden"]:nth-child(2)
+    referer: form#loginform > input[type="hidden"]:nth-child(3)
+    loginfield: "#loginfield"
+    questionid: "#questionid"
+    answer: input#answer
+    cookietime: input#cookietime
+  -
+    type: index
+    match: /index\.php
+    categories: .mainbox.list:not([id])
+    categoryTitle: h3 > a
+    items: tbody[id^=forum]
+    itemTitle: h2 > a
+    itemDesc: th p
+    itemThreadTodayCount: th strong
+    itemLastThread: td.forumlast p > a
+    itemLastReply: td.forumlast cite > a
+    # itemAvatar: img.avatar
+  -
+    type: list
+    match: /forumdisplay\.php\?fid=\d+
+    items: div#threadlist tbody[id^=normalthread_]
+    itemTitle: span[id^=thread_] > a
+    itemAuthor: td.author cite > a
+    # itemAvatar: img.avatar
+    itemLastReply: td.lastpost cite > a
+    itemReplyCount: td.nums > strong
+  -
+    type: thread
+    match: /viewthread\.php\?tid=\d+(&.*)?
+    # title: h1
+    # body: div.firstpost td.t_msgfont
+    # author: div.header > small > a
+    # avatar: div.header img.avatar
+    items: div#postlist > div[id^=post_]
+    itemContent: td.t_msgfont
+    itemAuthor: td.postauthor > .postinfo > a
+    itemAvatar: td.postauthor .avatar img
+    itemNo: td.postcontent > .postinfo > strong > a > em
+    
